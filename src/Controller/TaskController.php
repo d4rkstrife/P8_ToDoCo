@@ -43,6 +43,7 @@ class TaskController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $task->setCreatedAt(date_create());
             $task->setIsDone(false);
+            $task->setUser($this->getUser());
             $this->em->persist($task);
             $this->em->flush();
 
@@ -99,10 +100,15 @@ class TaskController extends AbstractController
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
         };
-        $this->em->remove($task);
-        $this->em->flush();
+        if($task->getUser()===$this->getUser()){
+            $this->em->remove($task);
+            $this->em->flush();
 
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
+            $this->addFlash('success', 'La tâche a bien été supprimée.');
+        } else if ($task->getUser()!==$this->getUser()){
+            $this->addFlash('error', "Vous n'êtes pas autorisé à effacer cette tâche.");
+        }
+
 
         return $this->redirectToRoute('task_list');
     }

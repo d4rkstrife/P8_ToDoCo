@@ -32,9 +32,6 @@ class UserController extends AbstractController
     #[Route('/users/create', name: 'user_create')]
     public function createAction(Request $request,  UserPasswordHasherInterface $passwordHasher): Response
     {
-        if(!$this->getUser()){
-            return $this->redirectToRoute('app_login');
-        };
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
 
