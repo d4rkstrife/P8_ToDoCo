@@ -22,6 +22,9 @@ class UserController extends AbstractController
     #[Route('/users', name: 'user_list')]
     public function listAction(): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        };
         return $this->render('user/list.html.twig', ['users' => $this->userRepository->findAll()]);
     }
 
@@ -29,6 +32,9 @@ class UserController extends AbstractController
     #[Route('/users/create', name: 'user_create')]
     public function createAction(Request $request,  UserPasswordHasherInterface $passwordHasher): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        };
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
 
@@ -53,6 +59,9 @@ class UserController extends AbstractController
     #[Route('/users/{id}/edit', name: 'user_edit')]
     public function editAction(User $user, Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        };
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
