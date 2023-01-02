@@ -20,6 +20,7 @@ class TaskController extends AbstractController
     #[Route('/tasks', name: 'task_list')]
     public function listAction(): Response
     {
+        /*if ($this->isGranted(UserVoter::VIEW ))*/
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
         };
