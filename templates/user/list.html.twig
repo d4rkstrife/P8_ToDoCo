@@ -7,7 +7,7 @@
 {% block body %}
     {% if users|length == 0 %}
         <div class="alert alert-warning" role="alert">
-            Il n'y a pas encore d'utilisateur enregistré. <a href="{{ path('user_create') }}" class="btn btn-warning pull-right">Créer un utilisateur</a>
+            {{ "user.noRegistrateUser"|trans }} <a href="{{ path('user_create') }}" class="btn btn-warning pull-right">{{ "user.createButton"|trans }}</a>
         </div>
     {% else %}
         <div class="row">
@@ -15,9 +15,9 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Nom d'utilisateur</th>
-                    <th>Adresse d'utilisateur</th>
-                    <th>Actions</th>
+                    <th>{{ "user.name"|trans }}</th>
+                    <th>{{ "user.adress"|trans }}</th>
+                    <th>{{ "user.role"|trans }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -26,9 +26,7 @@
                         <th scope="row">{{ loop.index }}</th>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
-                        <td>
-                            <a href="{{ path('user_edit', {'id' : user.id}) }}" class="btn btn-success btn-sm">Edit</a>
-                        </td>
+                        {# <td>{{ user.roles }}</td> #}
                     </tr>
                 {% endfor %}
                 </tbody>

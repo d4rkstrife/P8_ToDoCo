@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Security\Voter\UserVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +23,7 @@ class UserController extends AbstractController
     #[Route('/users', name: 'user_list')]
     public function listAction(): Response
     {
-        if(!$this->getUser()){
+        if(!$this->isGranted(UserVoter::EDIT)){
             return $this->redirectToRoute('app_login');
         };
         return $this->render('user/list.html.twig', ['users' => $this->userRepository->findAll()]);
