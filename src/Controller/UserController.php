@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Uid\Uuid;
 
 class UserController extends AbstractController
 {
@@ -41,7 +42,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
-
+            $user->setUuid(Uuid::v4());
             $this->em->persist($user);
             $this->em->flush();
 
@@ -75,5 +76,21 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
+    }
+
+    #[Route('/users/{uuid}/roleChange', name: 'user_roleChange')]
+    public function roleChange(User $user): Response
+    {
+        if(!$this->isGranted(UserVoter::EDIT)){
+            return $this->redirectToRoute('app_login');
+        }
+        if($user->getRoles()==['ROLE_USER']){
+            $user->setRoles(['ROLE_ADMIN']);
+        } else {
+            $user->setRoles(['ROLE_USER']);
+        }
+        $this->em->persist($user);
+        $this->em->flush();
+        return $this->redirectToRoute('user_list');
     }
 }

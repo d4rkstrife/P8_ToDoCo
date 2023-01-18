@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
+use App\Security\Voter\TaskVoter;
 use App\Security\Voter\UserVoter;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,8 +26,23 @@ class TaskController extends AbstractController
         if(!$this->isGranted(UserVoter::VIEW)){
             return $this->redirectToRoute('app_login');
         };
-        $userTasks = $this->taskRepository->findBy(["user" => $this->getUser()]);
-        $anonymeTasks = $this->taskRepository->findBy(["user" => null]);
+        $userTasks = $this->taskRepository->findBy(["user" => $this->getUser(), "isDone" => false]);
+        $anonymeTasks = $this->taskRepository->findBy(["user" => null, "isDone" => false]);
+        $tasks = array_merge($userTasks, $anonymeTasks);
+        return $this->render(
+            'task/list.html.twig',
+            ['tasks' => $tasks]
+        );
+    }
+
+    #[Route('/doneTasks', name: 'done_task_list')]
+    public function doneListAction(): Response
+    {
+        if(!$this->isGranted(UserVoter::VIEW)){
+            return $this->redirectToRoute('app_login');
+        };
+        $userTasks = $this->taskRepository->findBy(["user" => $this->getUser(), "isDone" => true]);
+        $anonymeTasks = $this->taskRepository->findBy(["user" => null, "isDone" => true]);
         $tasks = array_merge($userTasks, $anonymeTasks);
         return $this->render(
             'task/list.html.twig',
@@ -94,7 +111,7 @@ class TaskController extends AbstractController
         $task->setIsDone(!$task->isIsDone());
         $this->em->flush();
 
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        $this->addFlash('success', sprintf("L'avancement de la tâche a été modifié.", $task->getTitle()));
 
         return $this->redirectToRoute('task_list');
     }
@@ -105,16 +122,15 @@ class TaskController extends AbstractController
         if(!$this->isGranted(UserVoter::VIEW)){
             return $this->redirectToRoute('app_login');
         };
-        //TaskVoter::EDIT
-        if($task->getUser()===$this->getUser()){
+        if($this->isGranted(TaskVoter::DELETE, $task)){
+            dd('tutu');
             $this->em->remove($task);
             $this->em->flush();
 
             $this->addFlash('success', 'La tâche a bien été supprimée.');
-        } else if ($task->getUser()!==$this->getUser()){
+        } else {
             $this->addFlash('error', "Vous n'êtes pas autorisé à effacer cette tâche.");
         }
-
 
         return $this->redirectToRoute('task_list');
     }

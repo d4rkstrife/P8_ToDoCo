@@ -7,17 +7,19 @@
 {% block body %}
     {% if users|length == 0 %}
         <div class="alert alert-warning" role="alert">
-            {{ "user.noRegistrateUser"|trans }} <a href="{{ path('user_create') }}" class="btn btn-warning pull-right">{{ "user.createButton"|trans }}</a>
+            {{ "user.noRegistrateUser"|trans }} <a href="{{ path('user_create') }}"
+                                                   class="btn btn-warning pull-right">{{ "user.createButton"|trans }}</a>
         </div>
     {% else %}
         <div class="row">
             <table class="table">
                 <thead>
                 <tr>
-                    <th>#</th>
+                    <th>N°</th>
                     <th>{{ "user.name"|trans }}</th>
                     <th>{{ "user.adress"|trans }}</th>
                     <th>{{ "user.role"|trans }}</th>
+                    <th>{{ "user.modifiate"|trans }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -26,7 +28,18 @@
                         <th scope="row">{{ loop.index }}</th>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
-                        {# <td>{{ user.roles }}</td> #}
+
+
+                        {% set roleUser = 'User' %}
+                        {% for role in user.roles %}
+
+                            {% if role == 'ROLE_ADMIN' %}
+                                {% set roleUser = 'Admin' %}
+
+                            {% endif %}
+                        {% endfor %}
+                        <td>{{ roleUser }}</td>
+                        <td><a href={{ path('user_roleChange', {'uuid':user.uuid}) }}>{{ "user.modifiate"|trans }}</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>

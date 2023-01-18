@@ -5,6 +5,7 @@ namespace App\Factory;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Uid\Uuid;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
@@ -52,6 +53,7 @@ final class UserFactory extends ModelFactory
             'password' => 'Password1!',
             'roles' => ['ROLE_USER'],
             'username' => self::faker()->name(),
+            'uuid' => Uuid::v4(),
         ];
     }
 

@@ -2,20 +2,24 @@
 
 namespace App\Security\Voter;
 
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class TaskVoter extends Voter
 {
-    public const EDIT = 'POST_EDIT';
+    public function __construct(private Security $security){
+
+    }
+    public const DELETE = 'POST_DELETE';
     public const VIEW = 'POST_VIEW';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::EDIT, self::VIEW])
+        return in_array($attribute, [self::DELETE, self::VIEW])
             && $subject instanceof \App\Entity\Task;
     }
 
@@ -29,9 +33,13 @@ class TaskVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
-            case self::EDIT:
-                // logic to determine if the user can EDIT
-                // return true or false
+            case self::DELETE:
+                if ($user === $subject->getUser()){
+                    return true;
+                }
+                if($this->security->isGranted('ROLE_ADMIN') && $subject->getUser()=== null){
+                    return true;
+                }
                 break;
             case self::VIEW:
                 // logic to determine if the user can VIEW

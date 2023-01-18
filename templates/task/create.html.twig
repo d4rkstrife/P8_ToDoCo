@@ -3,9 +3,25 @@
 {% block body %}
     <div class="row">
         {{ form_start(form, {'action' : path('task_create')}) }}
-            {{ form_widget(form) }}
+        {{ form_errors(form) }}
+        <div class="form-row form-name-group">
+            <div class="form-group">
+                {{ form_label(form.title) }}
+                {{ form_widget(form.title,  {'attr': {'class': 'form-control'}})}}
+                {{ form_errors(form.title) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.content)}}
+                {{ form_widget(form.content, {'attr': {'class': 'form-control'}})}}
+                {{ form_errors(form.content) }}
+            </div>
 
-            <button type="submit" class="btn btn-success pull-right">{{ 'task.addButton'|trans }}</button>
+
+        </div>
+
+
+
+            <button type="submit" class="btn btn-success pull-left">{{ 'task.addButton'|trans }}</button>
         {{ form_end(form) }}
 
         <a href="{{ path('task_list') }}" class="btn btn-primary">{{ "task.returnButton"|trans }}</a>
