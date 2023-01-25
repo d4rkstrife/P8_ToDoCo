@@ -24,7 +24,7 @@ class UserController extends AbstractController
     #[Route('/users', name: 'user_list')]
     public function listAction(): Response
     {
-        if(!$this->isGranted(UserVoter::EDIT)){
+        if(!$this->isGranted(UserVoter::VIEW)){
             return $this->redirectToRoute('app_login');
         };
         return $this->render('user/list.html.twig', ['users' => $this->userRepository->findAll()]);
@@ -40,7 +40,6 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
             $user->setUuid(Uuid::v4());
             $this->em->persist($user);
@@ -54,34 +53,10 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
-
-    #[Route('/users/{id}/edit', name: 'user_edit')]
-    public function editAction(User $user, Request $request, UserPasswordHasherInterface $passwordHasher): Response
-    {
-        if(!$this->getUser()){
-            return $this->redirectToRoute('app_login');
-        };
-        $form = $this->createForm(UserType::class, $user);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
-
-            $this->em->flush();
-
-            $this->addFlash('success', "L'utilisateur a bien été modifié");
-
-            return $this->redirectToRoute('user_list');
-        }
-
-        return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
-    }
-
     #[Route('/users/{uuid}/roleChange', name: 'user_roleChange')]
     public function roleChange(User $user): Response
     {
-        if(!$this->isGranted(UserVoter::EDIT)){
+        if(!$this->isGranted(UserVoter::EDIT, $user)){
             return $this->redirectToRoute('app_login');
         }
         if($user->getRoles()==['ROLE_USER']){

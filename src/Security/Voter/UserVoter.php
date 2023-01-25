@@ -12,13 +12,12 @@ class UserVoter extends Voter
     public const EDIT = 'USER_EDIT';
     public const VIEW = 'USER_VIEW';
 
-    public function __construct(private Security $security){
-
+    public function __construct(private Security $security)
+    {
     }
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-
         return in_array($attribute, [self::EDIT, self::VIEW]);
     }
 
@@ -33,15 +32,16 @@ class UserVoter extends Voter
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case self::EDIT:
-                if ($this->security->isGranted('ROLE_ADMIN')) {
-                    return true;
-                } else {
+                if (!$this->security->isGranted('ROLE_ADMIN')) {
+                return false;
+            }
+                if ($user === $subject) {
                     return false;
                 }
-            case self::VIEW:
                 return true;
 
-
+            case self::VIEW:
+                return true;
         }
         return false;
     }

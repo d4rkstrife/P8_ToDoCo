@@ -9,9 +9,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class TaskVoter extends Voter
 {
-    public function __construct(private Security $security){
-
+    public function __construct(private Security $security)
+    {
     }
+
     public const DELETE = 'POST_DELETE';
     public const VIEW = 'POST_VIEW';
 
@@ -34,16 +35,16 @@ class TaskVoter extends Voter
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case self::DELETE:
-                if ($user === $subject->getUser()){
-                    return true;
+                if ($user !== $subject->getUser()) {
+                    return false;
                 }
-                if($this->security->isGranted('ROLE_ADMIN') && $subject->getUser()=== null){
-                    return true;
+                if (!($this->security->isGranted('ROLE_ADMIN') && $subject->getUser() === null)) {
+                    return false;
                 }
+                return true;
                 break;
             case self::VIEW:
-                // logic to determine if the user can VIEW
-                // return true or false
+                return true;
                 break;
         }
 
