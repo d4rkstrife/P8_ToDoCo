@@ -31,10 +31,24 @@
 
             <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="OpenClassrooms"/>
             {% if app.user %}
-            <div>
-                <p class="navbar-brand">{{ "app.connectedAs"|trans }}{{ app.user.username }}</p>
-            </div>
+                <div>
+                    <p class="navbar-brand">{{ "app.connectedAs"|trans }}{{ app.user.username }}</p>
+
+                    {% set roleUser = 'User' %}
+                    {% for role in app.user.roles %}
+                        {% if role == 'ROLE_ADMIN' %}
+                            {% set roleUser = 'Admin' %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if roleUser == 'Admin' %}
+                        <a class="navbar-brand" href="{{ path('user_list')}}">{{ "app.users"|trans }}</a>
+
+                    {% endif %}
+                </div>
             {% endif %}
+
+
+
 
         </div>
     </div>

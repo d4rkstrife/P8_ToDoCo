@@ -1,6 +1,7 @@
 base.title: "Bienvenue sur Todo List, l'application vous permettant de gérer l'ensemble de vos tâches sans effort !"
 app:
-  connectedAs: "connecté en tant que "
+  connectedAs: "Bienvenue "
+  users: "Utilisateurs"
 link:
   createNewTask: "Créer une nouvelle tâche"
   taskList: "Consulter la liste des tâches à faire"

@@ -123,7 +123,6 @@ class TaskController extends AbstractController
             return $this->redirectToRoute('app_login');
         };
         if($this->isGranted(TaskVoter::DELETE, $task)){
-            dd('tutu');
             $this->em->remove($task);
             $this->em->flush();
 
