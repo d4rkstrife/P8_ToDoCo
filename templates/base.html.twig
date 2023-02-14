@@ -34,22 +34,14 @@
                 <div>
                     <p class="navbar-brand">{{ "app.connectedAs"|trans }}{{ app.user.username }}</p>
 
-                    {% set roleUser = 'User' %}
                     {% for role in app.user.roles %}
                         {% if role == 'ROLE_ADMIN' %}
-                            {% set roleUser = 'Admin' %}
+                            <a class="navbar-brand" href="{{ path('user_list')}}">{{ "app.users"|trans }}</a>
                         {% endif %}
                     {% endfor %}
-                    {% if roleUser == 'Admin' %}
-                        <a class="navbar-brand" href="{{ path('user_list')}}">{{ "app.users"|trans }}</a>
 
-                    {% endif %}
                 </div>
             {% endif %}
-
-
-
-
         </div>
     </div>
 </nav>
