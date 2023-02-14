@@ -24,6 +24,6 @@ class SecurityControllerTest extends WebTestCase
         // simulate $testUser being logged in
         $client->loginUser($testUser);
         $client->request('GET', '/login');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
     }
 }

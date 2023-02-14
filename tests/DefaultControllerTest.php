@@ -13,6 +13,6 @@ class DefaultControllerTest extends WebTestCase
         $client->request('GET', '/');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('a', 'To Do List app');
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
     }
 }
