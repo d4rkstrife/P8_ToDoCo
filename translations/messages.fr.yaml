@@ -1,0 +1,35 @@
+base.title: "Bienvenue sur Todo List, l'application vous permettant de gérer l'ensemble de vos tâches sans effort !"
+app:
+  connectedAs: "Bienvenue "
+  users: "Utilisateurs"
+link:
+  createNewTask: "Créer une nouvelle tâche"
+  taskList: "Consulter la liste des tâches à faire"
+  DoneTaskList: "Consulter la liste des tâches terminées"
+  createUser: "Créer un utilisateur"
+  logOut: "Se déconnecter"
+  logIn: "Se connecter"
+flash:
+  success: "Superbe !"
+  alert: "Oops ! "
+form:
+  signInTitle: "Veuillez vous connecter"
+  password: "Mot de passe"
+task:
+  addButton: "Ajouter"
+  returnButton: "Retour à la liste des tâches"
+  modifiateButton: "Modifier"
+  createButton: "Créer une tâche"
+  deleteButton: "Supprimer"
+user:
+  createTitle: "Créer un utilisateur"
+  addButton: "Ajouter"
+  modifiateButton: "Modifier"
+  modifiate: "Changer rôle"
+  noRegistrateUser: "Il n'y a pas encore d'utilisateur enregistré."
+  createButton: "Créer un utilisateur"
+  name: "Nom d'utilisateur"
+  adress: "Adresse d'utilisateur"
+  role: "Role"
+
+

@@ -5,12 +5,14 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use App\Security\Voter\UserVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Uid\Uuid;
 
 class UserController extends AbstractController
 {
@@ -22,7 +24,7 @@ class UserController extends AbstractController
     #[Route('/users', name: 'user_list')]
     public function listAction(): Response
     {
-        if(!$this->getUser()){
+        if(!$this->isGranted(UserVoter::VIEW)){
             return $this->redirectToRoute('app_login');
         };
         return $this->render('user/list.html.twig', ['users' => $this->userRepository->findAll()]);
@@ -38,9 +40,8 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
-
+            $user->setUuid(Uuid::v4());
             $this->em->persist($user);
             $this->em->flush();
 
@@ -52,27 +53,19 @@ class UserController extends AbstractController
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);
     }
 
-
-    #[Route('/users/{id}/edit', name: 'user_edit')]
-    public function editAction(User $user, Request $request, UserPasswordHasherInterface $passwordHasher): Response
+    #[Route('/users/{uuid}/roleChange', name: 'user_roleChange')]
+    public function roleChange(User $user): Response
     {
-        if(!$this->getUser()){
+        if(!$this->isGranted(UserVoter::EDIT, $user)){
             return $this->redirectToRoute('app_login');
-        };
-        $form = $this->createForm(UserType::class, $user);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
-
-            $this->em->flush();
-
-            $this->addFlash('success', "L'utilisateur a bien été modifié");
-
-            return $this->redirectToRoute('user_list');
         }
-
-        return $this->render('user/edit.html.twig', ['form' => $form->createView(), 'user' => $user]);
+        if($user->getRoles()==['ROLE_USER']){
+            $user->setRoles(['ROLE_ADMIN']);
+        } else {
+            $user->setRoles(['ROLE_USER']);
+        }
+        $this->em->persist($user);
+        $this->em->flush();
+        return $this->redirectToRoute('user_list');
     }
 }
