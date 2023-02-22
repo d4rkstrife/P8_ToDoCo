@@ -25,7 +25,7 @@
 
     <coverage processUncoveredFiles="true">
         <include>
-            <directory suffix=".php">src</directory>
+            <directory suffix=".php">src</directory>-è(_çà
         </include>
         <exclude>
             <directory suffix=".php">src/DataFixtures/</directory>
@@ -35,10 +35,13 @@
         </exclude>
     </coverage>
 
+
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
     </listeners>
-
+    <extensions>
+        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
+    </extensions>
     <!-- Run `composer require symfony/panther` before enabling this extension -->
     <!--
     <extensions>

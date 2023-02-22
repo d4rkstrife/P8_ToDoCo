@@ -2,25 +2,27 @@
 
 namespace App\Tests\forms;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Entity\User;
+use App\Form\UserType;
+use Symfony\Component\Form\Test\TypeTestCase;
 
-class UserTypeTest extends WebTestCase
+class UserTypeTest extends TypeTestCase
 {
+
     public function testCreateUserForm(): void
     {
-        $client = static::createClient();
-        $crawler = $client->request('GET', '/login');
-        // select the button
-        $buttonCrawlerNode = $crawler->selectButton('.submit');
-// retrieve the Form object for the form belonging to this button
-        $form = $buttonCrawlerNode->form();
-        // set values on a form object
-        $form['form[username]'] = 'username';
-        $form['form[password]'] = 'Password1!';
-        $form['form[email]'] = 'test@mail.com';
-        $form['form[roles]'] = 'ROLE_USER';
+        $formData = [
+            'username' => 'John',
+            'email' => 'john@example.com',
+            'password' => 'Password1!',
+            'roles' => 'ROLE_USER'
+        ];
+        $model = new User();
+        $form = $this->factory->create(UserType::class, $model);
 
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'Hello World');
+        $form->submit($formData);
+
+        $this->assertTrue($form->isSynchronized());
+        $this->assertEquals($formData, $form->getData());
     }
 }

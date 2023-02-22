@@ -34,10 +34,9 @@ class SecurityControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $userRepository = static::getContainer()->get(UserRepository::class);
-        $users = $userRepository->findAll(0);
-        $testUser = $users[0];
+        $user = $userRepository->findOneBy(['email' => 'clark95@gmail.com']);
         // simulate $testUser being logged in
-        $client->loginUser($testUser);
+        $client->loginUser($user);
         $client->request('GET', '/logout');
         $client->followRedirect();
         $this->assertSelectorTextContains('.btn-success', 'Se connecter');
