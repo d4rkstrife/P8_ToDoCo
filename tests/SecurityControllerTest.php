@@ -26,7 +26,6 @@ class SecurityControllerTest extends WebTestCase
         $client->request('GET', '/login');
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $client->followRedirect();
-//        dump($client->getRequest()->getRequestUri());
         $this->assertEquals('/', $client->getRequest()->getRequestUri());
     }
 
@@ -34,11 +33,30 @@ class SecurityControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $userRepository = static::getContainer()->get(UserRepository::class);
-        $user = $userRepository->findOneBy(['email' => 'clark95@gmail.com']);
+        $user = $userRepository->findOneByEmail('clark95@gmail.com');
         // simulate $testUser being logged in
         $client->loginUser($user);
         $client->request('GET', '/logout');
         $client->followRedirect();
         $this->assertSelectorTextContains('.btn-success', 'Se connecter');
+    }
+
+    public function testLogIn(): void
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/login');
+
+// select the button
+        $buttonCrawlerNode = $crawler->selectButton('Se connecter');
+
+        $form = $buttonCrawlerNode->form();
+
+        $client->submit($form, [
+            'email' => 'clark95@gmail.com',
+            'password' => 'Password1!',
+        ]);
+        $client->followRedirect();
+        $this->assertEquals('/', $client->getRequest()->getRequestUri());
+        $this->assertSelectorTextContains('.btn-danger', 'Se déconnecter');
     }
 }

@@ -31,9 +31,12 @@ class TaskVoter extends Voter
         if (!$user instanceof UserInterface) {
             return false;
         }
-
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
+            case self::VIEW:
+
+                return true;
+
             case self::DELETE:
                 if ($user !== $subject->getUser()) {
                     return false;
@@ -42,10 +45,6 @@ class TaskVoter extends Voter
                     return false;
                 }
                 return true;
-                break;
-            case self::VIEW:
-                return true;
-                break;
         }
 
         return false;

@@ -23,9 +23,10 @@ class TaskController extends AbstractController
     #[Route('/tasks', name: 'task_list')]
     public function listAction(): Response
     {
-        if(!$this->isGranted(TaskVoter::VIEW)){
+        if(!$this->isGranted(UserVoter::VIEW)){
             return $this->redirectToRoute('app_login');
         };
+
         $userTasks = $this->taskRepository->findBy(["user" => $this->getUser(), "isDone" => false]);
         $anonymeTasks = $this->taskRepository->findBy(["user" => null, "isDone" => false]);
         $tasks = array_merge($userTasks, $anonymeTasks);
@@ -38,7 +39,7 @@ class TaskController extends AbstractController
     #[Route('/doneTasks', name: 'done_task_list')]
     public function doneListAction(): Response
     {
-        if(!$this->isGranted(TaskVoter::VIEW)){
+        if(!$this->isGranted(UserVoter::VIEW)){
             return $this->redirectToRoute('app_login');
         };
         $userTasks = $this->taskRepository->findBy(["user" => $this->getUser(), "isDone" => true]);
@@ -53,7 +54,7 @@ class TaskController extends AbstractController
     #[Route('/tasks/create', name: 'task_create')]
     public function createAction(Request $request): Response
     {
-        if(!$this->isGranted(TaskVoter::VIEW)){
+        if(!$this->isGranted(UserVoter::VIEW)){
             return $this->redirectToRoute('app_login');
         };
 
@@ -81,7 +82,7 @@ class TaskController extends AbstractController
     #[Route('/tasks/{id}/edit', name: 'task_edit')]
     public function editAction(Task $task, Request $request)
     {
-        if(!$this->isGranted(TaskVoter::VIEW)){
+        if(!$this->isGranted(UserVoter::VIEW)){
             return $this->redirectToRoute('app_login');
         };
         $form = $this->createForm(TaskType::class, $task);
@@ -105,7 +106,7 @@ class TaskController extends AbstractController
     #[Route('/tasks/{id}/toggle', name: 'task_toggle')]
     public function toggleTaskAction(Task $task)
     {
-        if(!$this->isGranted(TaskVoter::VIEW)){
+        if(!$this->isGranted(UserVoter::VIEW)){
             return $this->redirectToRoute('app_login');
         };
         $task->setIsDone(!$task->isIsDone());
@@ -119,7 +120,7 @@ class TaskController extends AbstractController
     #[Route('/tasks/{id}/delete', name: 'task_delete')]
     public function deleteTaskAction(Task $task)
     {
-        if(!$this->isGranted(TaskVoter::VIEW)){
+        if(!$this->isGranted(UserVoter::VIEW)){
             return $this->redirectToRoute('app_login');
         };
         if($this->isGranted(TaskVoter::DELETE, $task)){
