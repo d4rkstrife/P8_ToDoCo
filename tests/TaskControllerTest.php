@@ -172,7 +172,7 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $client->followRedirect();
         $this->assertEquals('/tasks', $client->getRequest()->getRequestUri());
-       // $this->assertSelectorTextContains('.alert-success', 'La tâche a bien été supprimée.');
+        //$this->assertSelectorTextContains('.alert-success', 'La tâche a bien été supprimée.');
     }
 
 }

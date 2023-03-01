@@ -24,7 +24,7 @@ class UserController extends AbstractController
     #[Route('/users', name: 'user_list')]
     public function listAction(): Response
     {
-        if(!$this->isGranted(UserVoter::VIEW)){
+        if(!$this->isGranted(UserVoter::EDIT)){
             return $this->redirectToRoute('app_login');
         };
         return $this->render('user/list.html.twig', ['users' => $this->userRepository->findAll()]);
