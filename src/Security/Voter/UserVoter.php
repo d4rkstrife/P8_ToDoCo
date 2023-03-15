@@ -31,16 +31,16 @@ class UserVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
+            case self::VIEW:
+                return true;
+
             case self::EDIT:
                 if (!$this->security->isGranted('ROLE_ADMIN')) {
-                return false;
-            }
+                    return false;
+                }
                 if ($user === $subject) {
                     return false;
                 }
-                return true;
-
-            case self::VIEW:
                 return true;
         }
         return false;
