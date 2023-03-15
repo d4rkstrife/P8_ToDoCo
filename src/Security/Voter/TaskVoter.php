@@ -20,7 +20,7 @@ class TaskVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::DELETE, self::VIEW])
+        return in_array($attribute, [self::DELETE])
             && $subject instanceof \App\Entity\Task;
     }
 
@@ -33,18 +33,17 @@ class TaskVoter extends Voter
         }
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
-            case self::VIEW:
-
-                return true;
 
             case self::DELETE:
-                if ($user !== $subject->getUser()) {
-                    return false;
+
+                if ($user === $subject->getUser()) {
+                    return true;
                 }
-                if (!($this->security->isGranted('ROLE_ADMIN') && $subject->getUser() === null)) {
-                    return false;
+                //dd($subject->getUser(), $this->security->isGranted('ROLE_ADMIN'),$subject->getUser() === null && !$this->security->isGranted('ROLE_ADMIN') );
+                if ($subject->getUser() === null && $this->security->isGranted('ROLE_ADMIN')) {
+                    return true;
                 }
-                return true;
+                return false;
         }
 
         return false;

@@ -34,6 +34,9 @@ class UserController extends AbstractController
     #[Route('/users/create', name: 'user_create')]
     public function createAction(Request $request,  UserPasswordHasherInterface $passwordHasher): Response
     {
+        if ($this->getUser()) {
+             return $this->redirectToRoute('homepage');
+         }
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
 
@@ -47,7 +50,7 @@ class UserController extends AbstractController
 
             $this->addFlash('success', "L'utilisateur a bien été ajouté.");
 
-            return $this->redirectToRoute('user_list');
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('user/create.html.twig', ['form' => $form->createView()]);

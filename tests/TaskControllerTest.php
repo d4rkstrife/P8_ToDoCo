@@ -172,7 +172,20 @@ class TaskControllerTest extends WebTestCase
         $this->assertEquals(302, $client->getResponse()->getStatusCode());
         $client->followRedirect();
         $this->assertEquals('/tasks', $client->getRequest()->getRequestUri());
-        //$this->assertSelectorTextContains('.alert-success', 'La tâche a bien été supprimée.');
+        $this->assertSelectorTextContains('.alert-success', 'La tâche a bien été supprimée.');
+    }
+    public function testDeleteTaskActionWhenLoggedInWithBadUser(): void
+    {
+        $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findOneBy(['email'=>'dkub@schuppe.com']);
+        // simulate $testUser being logged in
+        $client->loginUser($user);
+        $client->request('GET', '/tasks/11/delete');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $client->followRedirect();
+        $this->assertEquals('/tasks', $client->getRequest()->getRequestUri());
+        $this->assertSelectorTextContains('.alert-danger strong', 'Oops !');
     }
 
 }
