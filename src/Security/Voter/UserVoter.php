@@ -16,15 +16,17 @@ class UserVoter extends Voter
     {
     }
 
+
     protected function supports(string $attribute, mixed $subject): bool
     {
         return in_array($attribute, [self::EDIT, self::VIEW]);
     }
 
+
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-        // if the user is anonymous, do not grant access
+        // If the user is anonymous, do not grant access
         if (!$user instanceof UserInterface) {
             return false;
         }
@@ -35,7 +37,7 @@ class UserVoter extends Voter
                 return true;
 
             case self::EDIT:
-                if (!$this->security->isGranted('ROLE_ADMIN')) {
+                if ($this->security->isGranted('ROLE_ADMIN')===FALSE) {
                     return false;
                 }
                 if ($user === $subject) {
