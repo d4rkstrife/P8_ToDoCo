@@ -14,7 +14,6 @@ class TaskVoter extends Voter
     }
 
     public const DELETE = 'POST_DELETE';
-    public const VIEW = 'POST_VIEW';
 
     protected function supports(string $attribute, mixed $subject): bool
     {

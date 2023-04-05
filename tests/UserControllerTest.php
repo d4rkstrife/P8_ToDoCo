@@ -99,4 +99,19 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals('/users', $client->getRequest()->getRequestUri());
     }
 
+    public function testChangeRoleFromAdminToUser(): void
+    {
+        $client = static::createClient();
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $user = $userRepository->findOneBy(['email'=>'clark95@gmail.com']);
+        // simulate $testUser being logged in
+        $client->loginUser($user);
+        $subject = $userRepository->findOneBy(['email'=>'junior14@gmail.com']);
+        $uuid = $subject->getUuid();
+        $client->request('GET', '/users/'.$uuid.'/roleChange');
+        $this->assertEquals(302, $client->getResponse()->getStatusCode());
+        $client->followRedirect();
+        $this->assertEquals('/users', $client->getRequest()->getRequestUri());
+    }
+
 }
