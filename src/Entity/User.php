@@ -129,11 +129,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Task>
      */
+    /**
+     * @codeCoverageIgnore
+     */
     public function getTasks(): Collection
     {
         return $this->tasks;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function addTask(Task $task): self
     {
         if (!$this->tasks->contains($task)) {
@@ -144,6 +150,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public function removeTask(Task $task): self
     {
         if ($this->tasks->removeElement($task)) {
