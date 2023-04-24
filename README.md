@@ -1,3 +1,5 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f2a9c9fc8e8249eba96de3126e8ea311)](https://app.codacy.com/gh/d4rkstrife/P8_ToDoCo/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
 P8_ToDoCo
 Project installation Prerequisite :
 

@@ -27,8 +27,12 @@ class TaskController extends AbstractController
             return $this->redirectToRoute('app_login');
         };
 
-        $userTasks = $this->taskRepository->findBy(["user" => $this->getUser(), "isDone" => false]);
-        $anonymeTasks = $this->taskRepository->findBy(["user" => null, "isDone" => false]);
+        $userTasks = $this->taskRepository->findByUser($this->getUser(), false);
+        $anonymeTasks = [];
+
+        //$userTasks = $this->taskRepository->findBy(["user" => $this->getUser(), "isDone" => false]);
+        //$anonymeTasks = $this->taskRepository->findBy(["user" => null, "isDone" => false]);
+
         $tasks = array_merge($userTasks, $anonymeTasks);
         return $this->render(
             'task/list.html.twig',
@@ -42,8 +46,13 @@ class TaskController extends AbstractController
         if (!$this->isGranted(UserVoter::VIEW)) {
             return $this->redirectToRoute('app_login');
         };
-        $userTasks = $this->taskRepository->findBy(["user" => $this->getUser(), "isDone" => true]);
-        $anonymeTasks = $this->taskRepository->findBy(["user" => null, "isDone" => true]);
+
+        $userTasks = $this->taskRepository->findByUser($this->getUser(), true);
+        $anonymeTasks = [];
+
+//        $userTasks = $this->taskRepository->findBy(["user" => $this->getUser(), "isDone" => true]);
+//        $anonymeTasks = $this->taskRepository->findBy(["user" => null, "isDone" => true]);
+
         $tasks = array_merge($userTasks, $anonymeTasks);
         return $this->render(
             'task/list.html.twig',

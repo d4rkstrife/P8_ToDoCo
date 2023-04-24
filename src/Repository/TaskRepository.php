@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Task;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\Types\Boolean;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Task>
@@ -38,6 +40,18 @@ class TaskRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function findByUser(UserInterface $user, bool $isDone)
+    {
+        $query = $this->createQueryBuilder('T')
+            ->where('T.user = :userId')
+            ->orWhere('T.user is null')
+            ->andWhere('T.isDone = :isDone')
+            ->setParameter('userId', $user->getId())
+            ->setParameter('isDone', $isDone);
+        return $query->getQuery()->getResult();
+    }
+
 
 //    /**
 //     * @return Task[] Returns an array of Task objects
