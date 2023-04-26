@@ -1,7 +1,8 @@
-base.title: "Bienvenue sur Todo List, l'application vous permettant de gérer l'ensemble de vos tâches sans effort !"
+base.title: "Bienvenue sur Todo & Co, l'application vous permettant de gérer l'ensemble de vos tâches sans effort !"
 app:
   connectedAs: "Bienvenue "
   users: "Utilisateurs"
+  home: "Accueil"
 link:
   createNewTask: "Créer une nouvelle tâche"
   taskList: "Consulter la liste des tâches à faire"
