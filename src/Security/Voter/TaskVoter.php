@@ -38,7 +38,6 @@ class TaskVoter extends Voter
                 if ($user === $subject->getUser()) {
                     return true;
                 }
-                //dd($subject->getUser(), $this->security->isGranted('ROLE_ADMIN'),$subject->getUser() === null && !$this->security->isGranted('ROLE_ADMIN') );
                 if ($subject->getUser() === null && $this->security->isGranted('ROLE_ADMIN')) {
                     return true;
                 }
