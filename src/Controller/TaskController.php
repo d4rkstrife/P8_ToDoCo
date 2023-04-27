@@ -94,6 +94,7 @@ class TaskController extends AbstractController
         if (!$this->isGranted(UserVoter::VIEW)) {
             return $this->redirectToRoute('app_login');
         };
+        if ($this->isGranted(TaskVoter::DELETE, $task)) {
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
@@ -110,6 +111,10 @@ class TaskController extends AbstractController
             'form' => $form->createView(),
             'task' => $task,
         ]);
+        } else {
+            $this->addFlash('error', "Vous n' êtes pas autorisé à modifier cette tâche.");
+            return $this->redirectToRoute('task_list');
+        }
     }
 
     #[Route('/tasks/{id}/toggle', name: 'task_toggle')]
@@ -118,10 +123,14 @@ class TaskController extends AbstractController
         if (!$this->isGranted(UserVoter::VIEW)) {
             return $this->redirectToRoute('app_login');
         };
-        $task->setIsDone(!$task->isIsDone());
-        $this->em->flush();
+        if ($this->isGranted(TaskVoter::DELETE, $task)) {
+            $task->setIsDone(!$task->isIsDone());
+            $this->em->flush();
 
-        $this->addFlash('success', sprintf("L'avancement de la tâche a été modifié.", $task->getTitle()));
+            $this->addFlash('success', sprintf("L'avancement de la tâche a été modifié.", $task->getTitle()));
+        }else {
+            $this->addFlash('error', "Vous n'êtes pas autorisé à modifier cette tâche.");
+        }
 
         return $this->redirectToRoute('task_list');
     }
