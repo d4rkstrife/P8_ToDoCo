@@ -6,10 +6,13 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'Cette adresse mail est déjà utilisée')]
@@ -21,6 +24,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\Email(message: 'mailNotValid')]
+    #[NotBlank(message: 'mailNotNull')]
+    #[NotNull(message: 'mailNotNull')]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -30,6 +36,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\Regex('^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$^', message: 'passwordIncorrect')]
+    #[NotBlank(message: 'passwordNotNull')]
+    #[NotNull(message: 'passwordNotNull')]
     private ?string $password = null;
 
     #[ORM\Column(length: 25)]

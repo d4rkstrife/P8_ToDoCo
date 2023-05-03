@@ -1,0 +1,4 @@
+mailNotNull: "Le champ email ne peut pas être nul."
+mailNotValid: "Cette adresse mail n'est pas valide."
+passwordIncorrect: "Le mot de passe doit contenir au moins 8 caractères dont une majuscule, une minuscule, un chiffre et un caractère spécial."
+passwordNotNull: "Le mot de passe ne peut pas être vide."
